@@ -7,6 +7,9 @@ on:
     branches:
       - main
 
+permissions:
+  content: read
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -16,6 +19,17 @@ jobs:
 
       - name: Maven Build
         run: mvn install
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vprofile-app
+          path: target/*.war
+      
+      - name: Notify if the build fails
+        if: failure()
+        run: echo "Build failed, check the logs"
+
 
 
   Test:
